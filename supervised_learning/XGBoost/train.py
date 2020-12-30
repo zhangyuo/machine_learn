@@ -37,8 +37,8 @@ reg_alpha = 0
 reg_lambda = 1
 
 # data_process load: http://sofasofa.io/competition.php?id=7#c1
-trainFilePath = './data/train.csv'
-testFilePath = './data/test.csv'
+trainFilePath = '../data/train.csv'
+testFilePath = '../data/test.csv'
 data = pd.read_csv(trainFilePath)
 X, y = data.iloc[:, 1:len(data.columns) - 1], data['y']
 X['birth_date'] = 0
