@@ -33,7 +33,7 @@ def model_selection():
 
     # 把所有模型写到一个字典中
     models = {}
-    models['LR'] = LinearRegression()
+    models['Linear_regression'] = LinearRegression()
     models['Ridge'] = Ridge()
     models['LASSO'] = Lasso()
     models['DecisionTree'] = DecisionTreeRegressor()
