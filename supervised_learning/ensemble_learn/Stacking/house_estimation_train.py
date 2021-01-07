@@ -29,7 +29,7 @@ y = load_boston().target
 
 x = MinMaxScaler().fit_transform(x)
 xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.3, random_state=100)
-kf = KFold(n_splits=5, random_state=100)
+kf = KFold(n_splits=5, random_state=100, shuffle=True)
 n_train = xtrain.shape[0]
 n_test = xtest.shape[0]
 print("训练样本个数：", n_train)
@@ -37,10 +37,10 @@ print("测试样本个数：", n_test)
 
 # meta model choose，可以是同质学习器，也可以是异质学习器，但一般来说要保证不同学习器具有较为一致的结果（相差不能太大）
 models = [
-    RandomForestRegressor(n_estimators=300, random_state=100),
-    ExtraTreesRegressor(n_estimators=300, random_state=100, n_jobs=-1),
-    GradientBoostingRegressor(n_estimators=300, random_state=100),
-    XGBRegressor(n_estimators=300),
+    RandomForestRegressor(n_estimators=300, random_state=100, verbose=1, n_jobs=-1),
+    ExtraTreesRegressor(n_estimators=300, random_state=100, verbose=1, n_jobs=-1),
+    GradientBoostingRegressor(n_estimators=300, random_state=100, verbose=1),
+    XGBRegressor(n_estimators=300, random_state=100, verbosity=1),
     LGBMRegressor(n_estimators=300, random_state=100, n_jobs=-1),
     RidgeCV(alphas=[0.0001, 0.001, 0.01, 0.1, 0.2, 0.5, 1, 2, 3, 4, 5, 10, 20, 30, 50]),
     LinearRegression(),
@@ -79,7 +79,7 @@ xtest_new = np.zeros((n_test, n_models))
 for i, regressor in tqdm(enumerate(models), desc="offset:"):
     xtrain_new[:, i], xtest_new[:, i] = get_oof(regressor, xtrain, ytrain, xtest)
 
-# 基于元模型和元数据，训练第二层模型
+# 基于元模型和元特征，训练第二层模型
 reg = LinearRegression()
 reg.fit(xtrain_new, ytrain)
 # result = reg.predict(xtest_new)
